@@ -49,6 +49,9 @@ public class Main {
 //        trechoDAO.deletarTodosEResetarId();
 //        equipeManutencaoDAO.deletarTodosEResetarId();
 
+        System.out.println("================GUARDANDO RELATORIO=============");
+        relatorio.salvarRelatorio(relatorioDAO);
+
         System.out.println("=======CODIGO FINALIZADO========");
 
     }

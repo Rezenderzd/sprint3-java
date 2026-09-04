@@ -45,4 +45,34 @@ public class Relatorio {
             posicao++;
         }
     }
+
+    public void salvarRelatorio(RelatorioPrioridadeDAO dao) {
+
+        int totalEquipes = dao.contarEquipes();
+        int totalTrechos = dao.contarTrechos();
+
+        Map<String, Integer> contagemSensores =
+                dao.contarTrechosComESemSensor();
+
+        int trechosComSensor =
+                contagemSensores.getOrDefault("comSensor", 0);
+
+        int trechosSemSensor =
+                contagemSensores.getOrDefault("semSensor", 0);
+
+        List<EquipesRanking> rankingEquipes =
+                dao.obterRankingEquipes();
+
+        List<TrechoRanking> rankingTrechos =
+                dao.obterRankingTrechosComMaisIntervencoes();
+
+        dao.salvarRelatorio(
+                totalEquipes,
+                totalTrechos,
+                trechosComSensor,
+                trechosSemSensor,
+                rankingEquipes,
+                rankingTrechos
+        );
+    }
 }

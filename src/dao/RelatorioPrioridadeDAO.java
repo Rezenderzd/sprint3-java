@@ -160,4 +160,146 @@ public class RelatorioPrioridadeDAO {
         }
         return ranking;
     }
+
+    public void salvarRelatorio(
+            int totalEquipes,
+            int totalTrechos,
+            int trechosComSensor,
+            int trechosSemSensor,
+            List<EquipesRanking> rankingEquipes,
+            List<TrechoRanking> rankingTrechos) {
+
+        String sqlRelatorio =
+                "INSERT INTO relatoriosPrioridade " +
+                        "(totalEquipes, totalTrechos, trechosComSensor, trechosSemSensor) " +
+                        "VALUES (?, ?, ?, ?)";
+
+        String sqlEquipe =
+                "INSERT INTO rankingEquipes " +
+                        "(relatorioId, nomeEquipe, totalIntervencoes) " +
+                        "VALUES (?, ?, ?)";
+
+        String sqlTrecho =
+                "INSERT INTO rankingTrechos " +
+                        "(relatorioId, nome, quilometroInicial, quilometroFinal, totalIntervencoes) " +
+                        "VALUES (?, ?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement stmtRelatorio = null;
+        PreparedStatement stmtEquipe = null;
+        PreparedStatement stmtTrecho = null;
+        ResultSet rs = null;
+
+        try {
+
+            conn = ConexaoBanco.getConexao();
+            conn.setAutoCommit(false);
+
+
+            stmtRelatorio = conn.prepareStatement(
+                    sqlRelatorio,
+                    new String[]{"ID"}
+            );
+
+            stmtRelatorio.setInt(1, totalEquipes);
+            stmtRelatorio.setInt(2, totalTrechos);
+            stmtRelatorio.setInt(3, trechosComSensor);
+            stmtRelatorio.setInt(4, trechosSemSensor);
+
+            stmtRelatorio.executeUpdate();
+
+
+            rs = stmtRelatorio.getGeneratedKeys();
+
+            int relatorioId = 0;
+
+            if (rs.next()) {
+                relatorioId = rs.getInt(1);
+            }
+
+            stmtEquipe = conn.prepareStatement(sqlEquipe);
+
+            for (EquipesRanking equipe : rankingEquipes) {
+
+                stmtEquipe.setInt(1, relatorioId);
+                stmtEquipe.setString(2, equipe.nomeEquipe());
+                stmtEquipe.setInt(3, equipe.totalIntervencoes());
+
+                stmtEquipe.executeUpdate();
+            }
+
+
+            stmtTrecho = conn.prepareStatement(sqlTrecho);
+
+            for (TrechoRanking trecho : rankingTrechos) {
+
+                stmtTrecho.setInt(1, relatorioId);
+                stmtTrecho.setString(2, trecho.nomeTrecho());
+                stmtTrecho.setDouble(3, trecho.kmInicial());
+                stmtTrecho.setDouble(4, trecho.kmFinal());
+                stmtTrecho.setInt(5, trecho.totalIntervencoes());
+
+                stmtTrecho.executeUpdate();
+            }
+
+
+            conn.commit();
+
+            System.out.println("Relatório salvo com sucesso!");
+
+
+        } catch (SQLException e) {
+
+            System.err.println(
+                    "Erro ao salvar relatório: "
+                            + e.getMessage()
+            );
+            try {
+
+                if (conn != null) {
+                    conn.rollback();
+                }
+
+            } catch (SQLException ex) {
+
+                System.err.println(
+                        "Erro ao desfazer relatório: "
+                                + ex.getMessage()
+                );
+            }
+
+
+        } finally {
+
+            try {
+                if (rs != null) rs.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar ResultSet: " + e.getMessage());
+            }
+
+            try {
+                if (stmtRelatorio != null) stmtRelatorio.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar statement do relatório: " + e.getMessage());
+            }
+
+            try {
+                if (stmtEquipe != null) stmtEquipe.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar statement das equipes: " + e.getMessage());
+            }
+
+            try {
+                if (stmtTrecho != null) stmtTrecho.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar statement dos trechos: " + e.getMessage());
+            }
+
+            try {
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("Erro ao fechar conexão com o banco: " + e.getMessage());
+            }
+        }
+    }
 }
