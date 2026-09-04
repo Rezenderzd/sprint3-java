@@ -9,37 +9,6 @@ import java.util.List;
 
 public class EquipeManutencaoDAO {
 
-    public boolean criarTabela() {
-        String sqlTabela = "CREATE TABLE equipesManutencao (" +
-                "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
-                "nomeEquipe VARCHAR2(100) NOT NULL, " +
-                "quantidadeFuncionarios NUMBER NOT NULL, " +
-                "rocadaDeAtuacao VARCHAR2(100) NOT NULL" +
-                ")";
-
-        Connection conn = null;
-        Statement stmt = null;
-
-        try {
-            conn = ConexaoBanco.getConexao();
-            stmt = conn.createStatement();
-            stmt.execute(sqlTabela);
-            System.out.println("📋 Tabela 'equipesManutencao' criada com sucesso.");
-            return false;
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 955) { // ORA-00955: nome do objeto já está sendo usado
-                System.out.println("📋 Tabela 'equipesManutencao' já existe.");
-                return true;
-            } else {
-                System.out.println("⚠️ Falha ao tentar criar tabela: " + e.getMessage());
-                return false;
-            }
-        } finally {
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { }
-            if (conn != null) try { conn.close(); } catch (SQLException e) { }
-        }
-    }
-
     public void inserir(EquipeManutencao equipe) {
         String sql = "INSERT INTO equipesManutencao (nomeEquipe, quantidadeFuncionarios, rocadaDeAtuacao) VALUES (?, ?, ?)";
 

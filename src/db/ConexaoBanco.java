@@ -33,15 +33,4 @@ public class ConexaoBanco {
             throw new RuntimeException("Erro ao conectar ao Oracle: " + e.getMessage(), e);
         }
     }
-
-//    public static void fechar(Connection conexao) {
-//        try {
-//            if (conexao != null && !conexao.isClosed()) {
-//                conexao.close();
-//                System.out.println("🔌 Conexão fechada.");
-//            }
-//        } catch (SQLException e) {
-//            System.err.println("Erro ao fechar conexão: " + e.getMessage());
-//        }
-//    }
 }

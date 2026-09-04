@@ -11,7 +11,7 @@ CREATE TABLE equipesManutencao (
 id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 nomeEquipe VARCHAR2(100) NOT NULL,
 quantidadeFuncionarios NUMBER NOT NULL,
-roçadaDeAtuacao VARCHAR2(100) NOT NULL
+rocadaDeAtuacao VARCHAR2(100) NOT NULL
 );
 
 CREATE TABLE trechos (

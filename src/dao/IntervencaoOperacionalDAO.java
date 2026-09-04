@@ -8,39 +8,6 @@ import java.sql.*;
 
 public class IntervencaoOperacionalDAO {
 
-    public boolean criarTabela() {
-        String sqlTabela = "CREATE TABLE intervencoesOperacionais (" +
-                "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
-                "nome VARCHAR2(100) NOT NULL, " +
-                "quilometroInicial NUMBER NOT NULL, " +
-                "quilometroFinal NUMBER NOT NULL, " +
-                "tipoClima VARCHAR2(100) NOT NULL, " +
-                "nomeEquipe VARCHAR2(100) NOT NULL" +
-                ")";
-
-        Connection conn = null;
-        Statement stmt = null;
-
-        try {
-            conn = ConexaoBanco.getConexao();
-            stmt = conn.createStatement();
-            stmt.execute(sqlTabela);
-            System.out.println("📋 Tabela 'intervencoesOperacionais' criada com sucesso.");
-            return false;
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 955) {
-                System.out.println("📋 Tabela 'intervencoesOperacionais' já existe.");
-                return true;
-            } else {
-                System.out.println("⚠️ Falha ao tentar criar tabela: " + e.getMessage());
-                return false;
-            }
-        } finally {
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { }
-            if (conn != null) try { conn.close(); } catch (SQLException e) { }
-        }
-    }
-
 
     public void inserir(IntervencaoOperacional intervencao, TrechoRodovia trecho, EquipeManutencao equipe) {
         String sql = "INSERT INTO intervencoesOperacionais (nome, quilometroInicial, quilometroFinal, tipoClima, nomeEquipe) VALUES (?, ?, ?, ?, ?)";

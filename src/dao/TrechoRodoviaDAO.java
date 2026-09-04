@@ -10,40 +10,6 @@ import java.util.List;
 
 public class TrechoRodoviaDAO {
 
-    public boolean criarTabela() {
-        String sqlTabela = "CREATE TABLE trechos (" +
-                "id NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY, " +
-                "nome VARCHAR2(100) NOT NULL, " +
-                "quilometroInicial NUMBER NOT NULL, " +
-                "quilometroFinal NUMBER NOT NULL, " +
-                "nivelVegetacaoEmCm NUMBER NOT NULL, " +
-                "tipoClima VARCHAR2(100) NOT NULL, " +
-                "trechoComSenor NUMBER(1) NOT NULL" +
-                ")";
-
-        Connection conn = null;
-        Statement stmt = null;
-
-        try {
-            conn = ConexaoBanco.getConexao();
-            stmt = conn.createStatement();
-            stmt.execute(sqlTabela);
-            System.out.println("📋 Tabela 'trechos' criada com sucesso.");
-            return false;
-        } catch (SQLException e) {
-            if (e.getErrorCode() == 955) { // ORA-00955: nome do objeto já está sendo usado
-                System.out.println("📋 Tabela 'trechos' já existe.");
-                return true;
-            } else {
-                System.out.println("⚠️ Falha ao tentar criar tabela: " + e.getMessage());
-                return false;
-            }
-        } finally {
-            if (stmt != null) try { stmt.close(); } catch (SQLException e) { }
-            if (conn != null) try { conn.close(); } catch (SQLException e) { }
-        }
-    }
-
     public void inserir(TrechoRodovia trecho) {
         String sql = "INSERT INTO trechos (nome, quilometroInicial, quilometroFinal, nivelVegetacaoEmCm, tipoClima, trechoComSenor) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -172,7 +138,6 @@ public class TrechoRodoviaDAO {
         }
     }
 
-    //Utilizado apenas para testes
     public void deletar(Long id) {
         String sql = "DELETE FROM trechos WHERE id = ?";
 

@@ -15,7 +15,6 @@ import java.util.Map;
 
 public class RelatorioPrioridadeDAO {
 
-    // 1. Pega a quantidade de linhas da tabela equipesManutencao
     public int contarEquipes() {
         String sql = "SELECT COUNT(*) FROM equipesManutencao";
 
@@ -41,7 +40,6 @@ public class RelatorioPrioridadeDAO {
         return 0;
     }
 
-    // 2. Pega a quantidade de linhas da tabela trechos
     public int contarTrechos() {
         String sql = "SELECT COUNT(*) FROM trechos";
 
@@ -67,7 +65,6 @@ public class RelatorioPrioridadeDAO {
         return 0;
     }
 
-    // 3. Pega quantas vezes 1 e 0 aparecem na coluna trechoComSenor
     public Map<String, Integer> contarTrechosComESemSensor() {
         String sql = "SELECT " +
                 "  COUNT(CASE WHEN trechoComSenor = 1 THEN 1 END) AS com_sensor, " +
@@ -98,7 +95,6 @@ public class RelatorioPrioridadeDAO {
         return resultado;
     }
 
-    // 4. Gera o ranking de equipes por quantidade de intervenções
     public List<EquipesRanking> obterRankingEquipes() {
         String sql = "SELECT nomeEquipe, COUNT(*) AS total " +
                 "FROM intervencoesOperacionais " +
@@ -131,7 +127,6 @@ public class RelatorioPrioridadeDAO {
         return ranking;
     }
 
-    // 5. Gera o ranking de trechos por quantidade de intervenções
     public List<TrechoRanking> obterRankingTrechosComMaisIntervencoes() {
         String sql = "SELECT nome, quilometroInicial, quilometroFinal, COUNT(*) AS total " +
                 "FROM intervencoesOperacionais " +
